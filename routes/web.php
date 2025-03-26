@@ -100,10 +100,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Content 5
     Route::get('/content5/{nama}', [pendaftarController::class, 'index2'])->name('backend.content5');
+
+    Route::post('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
+    Route::post('/laporan/generate2', [LaporanController::class, 'generate2'])->name('laporan.generate2');
 });
 
-Route::post('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
-Route::post('/laporan/generate2', [LaporanController::class, 'generate2'])->name('laporan.generate2');
+
 
 // route khusus frontend
 Route::get('/homefrontend', [HomeFrontendController::class, 'index']) ->name('homefrontend');

@@ -134,7 +134,7 @@ textarea.form-control {
     </ul>
     <div class="me-5 navbar">
         <ul class="d-flex gap-4 m-0 list-unstyled align-items-center justify-content-center">
-            <li><a href="#" class="text-decoration-none">Home</a></li>
+            <li><a href="login" class="text-decoration-none">Home</a></li>
             <li><a href="{{ route('lowonganfrontend') }}" class="text-decoration-none">Lowongan</a></li>
             <li><a href="{{ route('aboutusfrontend') }}" class="text-decoration-none me-2">Tentang Kami</a></li>
         </ul>

@@ -49,7 +49,7 @@
     <div class="mt-5 mb-5">
         <div class="container">
             <!-- Konten lowongan pekerjaan -->
-            <div id="jobContent">
+            <div id="jobContent" style="margin-top: 150px">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -59,7 +59,7 @@
                         </ul>
                     </div>
                 @endif
-                <h1 class="text-start" style="margin-top: 150px">WEB DEVELOPER</h1>
+                <h1 class="text-start" >WEB DEVELOPER</h1>
                 <div class="bg-warning mb-4" style="height: 4px; width: 12%;"></div>
                 <div class="card">
                     <div class="card text-bg-dark">
