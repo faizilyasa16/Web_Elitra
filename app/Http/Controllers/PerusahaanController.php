@@ -3,22 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Perusahaan;
+use App\Models\SudahKontrak;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PerusahaanController extends Controller
 {
-    public function index(Request $request )
+    public function index(Request $request)
     {
-        // Ambil input pencarian
+        // Ambil input pencarian jika ada (opsional, bisa dipakai buat filter PT tertentu)
         $query = $request->input('query'); 
+
+        $data4 = SudahKontrak::select('pt', DB::raw('count(*) as total'))
+            ->when($query, function ($q) use ($query) {
+                $q->where('pt', 'like', '%' . $query . '%');
+            })
+            ->groupBy('pt')
+            ->paginate(5); // ✅ langsung paginate, jangan get()
+        
+
     
-        // Cek apakah ada query pencarian, dan filter data jika ada
-        $data4 = Perusahaan::where('perusahaan', 'LIKE', "%{$query}%") // Cari berdasarkan nama perusahaan
-                    ->paginate(5); // Paginate hasil
-    
-        // Kirim data ke view
         return view('backend.content4', compact('data4'));
     }
+    
     
 
     public function create()

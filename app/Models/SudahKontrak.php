@@ -11,9 +11,10 @@ class SudahKontrak extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'pekerja_memiliki_kontrak'; // Nama tabel
+    protected $table = 'pekerja'; // Nama tabel
     
     protected $fillable = [
+        'user_id',
         'nama',  // Ganti 'name' menjadi 'nama'
         'posisi_dikontrak',
         'tanggal_mulai_kontrak',
@@ -21,7 +22,8 @@ class SudahKontrak extends Authenticatable
         'pt',
         'lama_kontrak',
         'upah_kontrak',
-        'status',
+        'tanggal_akhir_kontrak',
+        'status_kontrak',
     ];
 
 

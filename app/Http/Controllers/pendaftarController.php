@@ -4,20 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Pendaftar;
 use App\Http\Controllers\Controller;
+use App\Models\HistoryPendaftar;
+use App\Models\JawabanSoalLowongan;
+use App\Models\SudahKontrak;
 use Illuminate\Http\Request;
 
 class pendaftarController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = $request->input('query'); // Ambil input pencarian
-        $data3 = Pendaftar::where('nama', 'LIKE', "%{$query}%") // Cari berdasarkan nama
-                    ->orWhere('posisi_dilamar', 'LIKE', "%{$query}%") // Atau posisi yang dilamar
-                    ->orWhere('email', 'LIKE', "%{$query}%") // Atau email
-                    ->paginate(5); // Paginate hasil
-        // Kirim data ke view
-        return view('backend.content3', compact('data3'));
+        $pendaftar = Pendaftar::with(['customer', 'jawabanSoal.soalLowongan'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    
+        // Ambil semua user_id yang sudah menjadi pekerja
+        $userPekerjaIds = SudahKontrak::pluck('user_id')->toArray();
+    
+        return view('backend.content3', compact('pendaftar', 'userPekerjaIds'));
     }
+
     public function index2(Request $request, $nama)
     {
         // Contoh mengambil data berdasarkan nama
@@ -32,14 +37,24 @@ class pendaftarController extends Controller
         return view('backend.content5', compact('data'));
     }
     public function updateStatus(Request $request, $id)
-    {
+    {        
         $pendaftar = Pendaftar::findOrFail($id);
+    
+        // Catat history perubahan status
+        HistoryPendaftar::create([
+            'pendaftar_id' => $pendaftar->id,
+            'status_lama' => $pendaftar->status,
+            'status_baru' => $request->status,
+        ]);
+    
+        // Update status
         $pendaftar->status = $request->status;
         $pendaftar->save();
-
+    
         return redirect()->route('backend.content3.index')->with('success', 'Status berhasil diperbarui');
     }
-
+    
+    
     
 
     public function store(Request $request)
@@ -95,14 +110,10 @@ class pendaftarController extends Controller
 
     public function destroy($id)
     {
-        // Cari data pekerja berdasarkan ID
-        $pekerja = Pendaftar::findOrFail($id);
+        $pendaftar = Pendaftar::findOrFail($id);
+        $pendaftar->delete();
     
-        // Hapus data pekerja
-        $pekerja->delete();
-    
-        // Redirect kembali ke halaman dengan pesan sukses
-        return redirect()->route('backend.content3.index')->with('success', 'Pekerja berhasil dihapus.');
+        return redirect()->route('backend.content3.index')->with('success', 'Data berhasil dihapus');
     }
     
     

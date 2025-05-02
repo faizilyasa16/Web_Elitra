@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->enum('role', [0,1,2])->default(0); //disini 0 untuk admin 1 untuk superadmin dan 2 untuk customer
+            $table->enum('role', ['superadmin', 'admin', 'customer'])->default('customer'); //disini 0 untuk admin 1 untuk superadmin dan 2 untuk customer
             $table->boolean('status');// fungsi ini adalah jika 0 user belom aktif/di non aktifkan kalo 1 user dapat mengakses dan login ke sistem
             $table->string('password');
             $table->string('hp', 15);

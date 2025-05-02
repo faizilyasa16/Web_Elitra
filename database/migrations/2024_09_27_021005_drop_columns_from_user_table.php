@@ -10,7 +10,6 @@ class DropColumnsFromUserTable extends Migration
     {
         Schema::table('user', function (Blueprint $table) {
             $table->dropColumn('status');  // Hapus kolom 'status'
-            $table->dropColumn('foto');    // Hapus kolom 'foto'
         });
     }
 
@@ -18,7 +17,6 @@ class DropColumnsFromUserTable extends Migration
     {
         Schema::table('user', function (Blueprint $table) {
             $table->string('status')->nullable(); // Kembalikan kolom 'status'
-            $table->string('foto')->nullable();   // Kembalikan kolom 'foto'
         });
     }
 }

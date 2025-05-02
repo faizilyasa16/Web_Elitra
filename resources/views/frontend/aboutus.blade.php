@@ -1,45 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{ asset('css/Bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/Bootstrap-icon/font/bootstrap-icons.css') }}">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        .navbar ul li a {
-            color: white;
-            transition: color 0.3s ease;
-        }
+@extends('frontend.layout')
 
-        .navbar ul li a:hover {
-            color: orange;
-        }
-        .container-fluid {
-    max-width: 1920px;
-    margin: 0 auto;
-}
-
-    </style>
-</head>
-<body>
-    <div class="w-100 d-flex align-items-center justify-content-between position-fixed top-0" style="height: 100px; z-index: 1000; background-color: #222C65;">
-        <ul class="d-flex align-items-center list-unstyled m-0">
-            <li class="d-flex position-relative" style="right: 10px; bottom: 5px;">
-                <img src="img/logo_elitra.png" alt="" width="150px">
-            </li>
-        </ul>
-        <div class="me-5 navbar">
-            <ul class="d-flex gap-4 m-0 list-unstyled align-items-center justify-content-center">
-                <li><a href="{{ route('homefrontend') }}" class="text-decoration-none">Home</a></li>
-                <li><a href="{{ route('lowonganfrontend') }}" class="text-decoration-none">Lowongan</a></li>
-                <li><a href="#" class="text-decoration-none me-2">Tentang Kami</a></li>
-            </ul>
-        </div>        
-    </div>
-
+@section('content')
     {{-- bikin main content --}}
     <div class="mt-5">
         <div class="container">
@@ -156,186 +117,82 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-center mt-5">
+                <div class="text-center mt-5 mb-5">
                     <h1 >Berminat Bekerja sama dengan kami?</h1>
                     <p>Kami Menanti Kehadiran anda</p>
                     <button class="btn w-50 rounded-5" style="background-color: #222C65"><a href="{{ route('lowonganfrontend') }}" class="text-white text-decoration-none">Lihat lebih banyak lagi </a></button>
-                </div>                             
+                </div>
         </div>
-        <div class="container-fluid mt-5  w-100" style="background: #222C65">
-                    <div class="row">
-                        <div class="col-12 d-flex">
-                            <!-- Bagian kiri col-6 -->
-                            <div class="col-6">
-                                <h1 class="text-white ms-3">Profile Perusahaan</h1>
-                                <div class="row">
-                                    <div class="col-12  d-flex mt-3 justify-content-between">
-                                        <div class="col-6 me-3 bg-primary rounded-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="col-3 d-flex justify-content-center">
-                                                    <i class="bi bi-building-fill fs-1 text-white"></i>
-                                                </div>
-                                                <div class="col-9">
-                                                    <p class="text-white text-center mt-3">Nama Perusahaan</p>
-                                                    <p class="text-white fw-bold text-center">PT. Elitra</p>
-                                                </div>
-                                            </div>
-                                        </div>  
-                                        <div class="col-6 bg-primary rounded-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="col-3 d-flex justify-content-center">
-                                                    <i class="bi bi-card-text fs-1 text-white"></i>
-                                                </div>
-                        
-                                                <div class="col-9">
-                                                    <p class="text-white text-center mt-2">NIB</p>
-                                                    <p class="text-white fw-bold text-center">123456789</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 mt-3 d-flex justify-content-between">
-                                        <div class="col-6 me-3 bg-primary rounded-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="col-3 d-flex justify-content-center">
-                                                    <i class="bi bi-person-fill fs-1 text-white"></i>
-                                                </div>
-                                                <div class="col-9">
-                                                    <p class="text-white text-center mt-2">Direktur Perusahaan</p>
-                                                    <p class="text-white fw-bold text-center">Fathur Rahman Rifaldi Al Gobiyun jiddan</p>
-                                                </div>
-                                            </div>
-                                        </div>                                        
-                                        <div class="col-6 bg-primary rounded-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="col-3 d-flex justify-content-center">
-                                                    <i class="bi bi-briefcase-fill fs-1 text-white"></i>
-                                                </div>
-                        
-                                                <div class="col-9">
-                                                    <p class="text-white text-center mt-2">Bidang Usaha</p>
-                                                    <p class="text-white fw-bold text-center">Perusahaan Penyedia Tenaga Kerja IT</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Gambar di sebelah kanan -->
-                            <div class="col-6" style="padding-left: 50px;">
-                                <img src="{{ asset('img/alam.jpg') }}" alt="" class="" style="width: 46.9vw; height: 300px; object-fit: cover; ">
-                            </div>
-                        </div>
+        
+        <div class="px-5 py-5 " style="background-color: #1C2655;">
+            <div id="carouselExampleControls" style=" min-width: 100%;" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="mb-3">
+                        <h1 class="text-center text-white">What We've Done</h1>
                     </div>
-                </div>
-                <div class="container-fluid pb-3" style="background-color: #1C2655; width: 100%;">
-                    <div class="row">
-                        <div class="col-3 text-center text-white mt-3">
-                            <h3>Alamat Perusahaan</h3>
-                            <p>Jl. Cut Mutia No. 88, Sepanjang Jaya, Kec. Rawalumbu, Kota Bekasi, Jawa Barat 17113, Indonesia</p>
-                        </div>
-                        <div class="col-3 text-white mt-3">
-                            <div class="mx-auto" style="height: 100px; width: 90%;">
-                                <div class="row bg-primary p-3 rounded">
-                                    <div class="col-2 d-flex justify-content-center align-items-center">
-                                        <i class="bi bi-telephone-fill fs-1 text-white" style="transition: transform 0.3s; cursor: pointer;"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <p class="text-white text-center mt-1 mb-0">Telepon</p>
-                                        <p class="text-white text-center fw-bold mt-1 mb-0">+6281234567890</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3 text-white mt-3">
-                            <div class="mx-auto" style="height: 100px; width: 90%;">
-                                <div class="row bg-primary p-3 rounded">
-                                    <div class="col-2 d-flex justify-content-center align-items-center">
-                                        <i class="bi bi-whatsapp fs-1 text-white" style="transition: transform 0.3s; cursor: pointer;"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <p class="text-white text-center mt-1 mb-0">Whatsapp</p>
-                                        <p class="text-white text-center fw-bold mt-1 mb-0">+6281234567890</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3 text-white mt-3" >
-                            <div class="mx-auto" style="height: 100px; width: 90%;">
-                                <div class="row bg-primary p-3 rounded">
-                                    <div class="col-2 d-flex justify-content-center align-items-center">
-                                        <i class="bi bi-envelope-fill fs-1 text-white" style="transition: transform 0.3s; cursor: pointer;"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <p class="text-white text-center mt-1 mb-0">Email</p>
-                                        <p class="text-white text-center fw-bold mt-1 mb-0">LQl7y@example.com</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Ulangi pola ini untuk kolom telepon lainnya -->
+                <div class="carousel-item active">
+                  <div class="cards-wrapper">
+                    <div class="card d-none d-md-block bg-light">
+                      <img src="{{ asset('img/porto1.jpg') }}" class="card-img-top shadow-lg" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      </div>
                     </div>
+                    <div class="card d-none d-md-block bg-light">
+                      <img src="{{ asset('img/porto2.png') }}" class="card-img-top shadow-lg" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                  </div>
+                  <div class="card d-none d-md-block bg-light">
+                    <img src="{{ asset('img/porto3.png') }}" class="card-img-top shadow-lg" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                  </div>
                 </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="cards-wrapper">
+                    <div class="card d-none d-md-block bg-light">
+                      <img src="{{ asset('img/porto2.png') }}" class="card-img-top shadow-lg" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      </div>
+                    </div>
+                    <div class="card d-none d-md-block bg-light">
+                      <img src="{{ asset('img/porto5.png') }}" class="card-img-top shadow-lg" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      </div>
+                    </div>
+                    <div class="card d-none d-md-block bg-light">
+                      <img src="{{ asset('img/porto6.png') }}" class="card-img-top shadow-lg" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </a>
+              
+            </div>
+        </div>
     </div>
-    <div class="w-100" style="height: 200px; background-color: #222C65;">
-        <div class="container">
-          <div class="row">
-            <div class="col-3">
-              <img src="{{ asset('img/logo_elitra.png') }}" alt="" style="width: 200px;">
-            </div>
-            <div class="col-3" style="margin-top: 20px">
-              <h4 class="text-white">Tentang Kami</h4>
-              <p class="text-white">EIitra adalah layanan outsourcing berbasis software yang fokus pada rekrutmen, mempermudah pencarian pekerjaan dan perekrutan karyawan dengan solusi efisien dan terintegrasi.</p>
-            </div>
-            <div class="col-3" style="margin-top: 20px;">
-              <h4 class="text-white">Follow Us</h4>
-              <ul class="list-unstyled d-flex m-0 p-0">
-                <li class="me-3">
-                  <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-                    <i class="bi bi-facebook"></i>
-                  </a>
-                </li>
-                <li class="me-3">
-                  <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-                    <i class="bi bi-instagram"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-                    <i class="bi bi-twitter"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            
-            
-            
-            <div class="col-3" style="margin-top: 20px">
-              <h4 class="text-white">Contact Us</h4>
-              <ul class=" list-unstyled m-0">
-                <li class="d-flex align-items-center">
-                  <i class="bi bi-building me-3 text-white"></i>
-                  <p class="text-white mb-0">Jl. Cut Mutia No. 88, Kota Bekasi</p>
-                </li>
-                <li class="d-flex align-items-center">
-                  <i class="bi bi-phone me-3 text-white"></i>
-                  <p class="text-white mb-0">+6281234567890</p>
-                </li>
-                <li class="d-flex align-items-center">
-                  <i class="bi bi-envelope me-3 text-white"></i>
-                  <p class="text-white mb-0">LQl7y@example.com</p>
-                </li>
-                
-              </ul>
-            </div>
-        </div>
-      </div>
-      
-      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-      <script>
-        AOS.init();
-      </script>
-    
-</body>
-</html>
+
+@endsection

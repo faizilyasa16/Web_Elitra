@@ -42,7 +42,7 @@
 <body>
     <section class="login-section">
         <div class="container w-50">
-            <h1 class="text-center text-white mb-3">Elit<span class="text-warning fw-bold">Ra</span></h1>
+            <h1 class="text-center text-white mb-3">Elit<span class="fw-bold" style="color: #FF8B00">Ra</span></h1>
             <div class="row login-left">
                 <div class="col-md-12 order-md-1">
                     <h3 class="text-center text-white mb-3">{{ $title }}</h3>
@@ -77,8 +77,8 @@
                             <div style="width: 100%; height: 2px; background-color: #ddd;"></div>
                         </div>
                         <div class="mb-3 d-flex justify-content-between">
-                            <a class="text-start" href="{{ route('register') }}">Belum Punya Akun?</a>
-                            <a class="text-end" href="{{ route('reset_password') }}">Lupa Password?</a>
+                            <a class="text-start text-white" href="{{ route('register') }}">Belum Punya Akun?</a>
+                            <a class="text-end text-white" href="{{ route('reset_password') }}">Lupa Password?</a>
                         </div>
                         
                         <div class="d-flex justify-content-between">

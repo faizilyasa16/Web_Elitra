@@ -1,145 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{ asset('css/Bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/Bootstrap-icon/font/bootstrap-icons.css') }}">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+@extends('frontend.layout')
 
-    <style>
-/* Navbar hover */
-.navbar ul li a {
-    color: white;
-    transition: color 0.3s ease;
-}
-
-.navbar ul li a:hover {
-    color: orange;
-}
-
-/* Textarea styling */
-textarea.form-control {
-    min-height: 100px;
-    resize: vertical;
-    width: 100%;
-}
-
-/* Slider container */
-.body-slide {
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-}
-
-.slider {
-    height: 300px;
-    width: 100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-/* Track for slides */
-.slide-track {
-    display: flex;
-    width: calc(300px * 20); /* Adjust based on item count */
-    animation: scroll 50s linear infinite;
-}
-
-.slide-track:hover {
-    animation-play-state: paused;
-}
-
-/* Keyframes for smooth scrolling */
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(calc(-300px * 5)); /* Half of total width */
-    }
-}
-
-/* Slide styling */
-.slide {
-    height: 200px;
-    width: 300px;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    perspective: 100px;
-}
-
-.slide img {
-    width: 100%;
-    transition: transform 0.8s ease;
-}
-
-.slide img:hover {
-    transform: scale(1.1);
-}
-
-/* Optional shadow fade on edges */
-.slider::before,
-.slider::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 15%;
-    height: 100%;
-    z-index: 2;
-    pointer-events: none; /* Allow interaction with slides */
-}
-
-.slider::after {
-    right: 0;
-    transform: rotateY(180deg);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .slide {
-        width: 150px;
-    }
-
-    .slide-track {
-        width: calc(150px * 20); /* Adjusted for responsive */
-        animation: scroll 60s linear infinite;
-    }
-
-    @keyframes scroll {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(calc(-150px * 10)); /* Adjusted for responsive */
-        }
-    }
-}
-
-  </style>
-</head>
-<body data-bs-theme="light">
-  <div class="w-100 d-flex align-items-center justify-content-between position-fixed top-0" style="height: 100px; z-index: 1000; background-color: #222C65;">
-    <ul class="d-flex align-items-center list-unstyled m-0">
-        <li class="d-flex position-relative" style="right: 10px; bottom: 5px;">
-            <img src="img/logo_elitra.png" alt="" width="150px">
-        </li>
-    </ul>
-    <div class="me-5 navbar">
-        <ul class="d-flex gap-4 m-0 list-unstyled align-items-center justify-content-center">
-            <li><a href="#" class="text-decoration-none">Home</a></li>
-            <li><a href="{{ route('lowonganfrontend') }}" class="text-decoration-none">Lowongan</a></li>
-            <li><a href="{{ route('aboutusfrontend') }}" class="text-decoration-none me-2">Tentang Kami</a></li>
-        </ul>
-    </div>        
-</div>
+@section('content')
 
 <!-- Tambahkan padding pada konten utama -->
 <div class="content" style="padding-top: 100px;">
@@ -234,66 +95,66 @@ textarea.form-control {
 <div class="body-slide">
   <div class="slider">
     <div class="slide-track">
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/tokped.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/kfc.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/bca.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/astra.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/danone.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/lion.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/perta.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/telkom.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/unilever.png') }}" alt="">
       </div>
       {{-- nge doublein --}}
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/indofod.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/tokped.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/kfc.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/bca.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/astra.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/danone.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/lion.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/perta.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/telkom.png') }}" alt="">
       </div>
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/unilever.png') }}" alt="">
       </div>
       {{-- nge doublein --}}
-      <div class="slide">
+      <div class="img-slide">
         <img src="{{ asset('img/indofod.png') }}" alt="">
       </div>
       
@@ -347,73 +208,4 @@ textarea.form-control {
 
 
 </div>
-<div class="w-100" style="height: 200px; background-color: #222C65;">
-  <div class="container">
-    <div class="row">
-      <div class="col-3">
-        <img src="{{ asset('img/logo_elitra.png') }}" alt="" style="width: 200px;">
-      </div>
-      <div class="col-3" style="margin-top: 20px">
-        <h4 class="text-white">Tentang Kami</h4>
-        <p class="text-white">EIitra adalah layanan outsourcing berbasis software yang fokus pada rekrutmen, mempermudah pencarian pekerjaan dan perekrutan karyawan dengan solusi efisien dan terintegrasi.</p>
-      </div>
-      <div class="col-3" style="margin-top: 20px;">
-        <h4 class="text-white">Follow Us</h4>
-        <ul class="list-unstyled d-flex m-0 p-0">
-          <li class="me-3">
-            <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-              <i class="bi bi-facebook"></i>
-            </a>
-          </li>
-          <li class="me-3">
-            <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-              <i class="bi bi-instagram"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-              <i class="bi bi-twitter"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-      
-      
-      
-      <div class="col-3" style="margin-top: 20px">
-        <h4 class="text-white">Contact Us</h4>
-        <ul class=" list-unstyled m-0">
-          <li class="d-flex align-items-center">
-            <i class="bi bi-building me-3 text-white"></i>
-            <p class="text-white mb-0">Jl. Cut Mutia No. 88, Kota Bekasi</p>
-          </li>
-          <li class="d-flex align-items-center">
-            <i class="bi bi-phone me-3 text-white"></i>
-            <p class="text-white mb-0">+6281234567890</p>
-          </li>
-          <li class="d-flex align-items-center">
-            <i class="bi bi-envelope me-3 text-white"></i>
-            <p class="text-white mb-0">LQl7y@example.com</p>
-          </li>
-          
-        </ul>
-      </div>
-  </div>
-</div>
-
-      
-      
-      
-
-
-      <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-      <script>
-        AOS.init();
-      </script>
-      
-
-    
-</body>
-</html>
+@endsection

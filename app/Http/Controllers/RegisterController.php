@@ -24,6 +24,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:user',
             'hp' => 'required|max:15',
             'password' => 'required|string|min:8|confirmed',
+            
         ]);
     
         // Simpan data ke database

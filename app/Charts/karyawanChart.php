@@ -11,11 +11,11 @@ class KaryawanChart
     {
         $this->chart = $chart;
     }
-    public function build($webDevCount, $cyberSecurityCount, $softwareDevCount, $uiUxDesignCount): \ArielMejiaDev\LarapexCharts\PieChart
+    public function build(array $pendaftarCount): \ArielMejiaDev\LarapexCharts\PieChart
     {
         return $this->chart->pieChart()
-            ->addData([$webDevCount, $cyberSecurityCount, $softwareDevCount, $uiUxDesignCount]) // Menggunakan data dinamis
-            ->setLabels(['Web Developer', 'Cyber Security', 'Software Developer', 'UI/UX'])
+            ->addData(array_values($pendaftarCount)) // jumlah orangnya
+            ->setLabels(array_keys($pendaftarCount)) // nama posisi
             ->setColors(['#1E90FF', '#FF6347', '#FFD700', '#FFC0CB']);// Sesuaikan warna bagian
 
     }

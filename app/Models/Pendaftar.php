@@ -4,36 +4,40 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class Pendaftar extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
 
-    protected $table = 'pendaftar_ke_elitra'; // Nama tabel
+    protected $table = 'pendaftar';
 
     protected $fillable = [
-        'nama',               // Nama lengkap
-        'posisi_dilamar',
-        'tanggal_submit',
-        'tanggal_lahir',      // Kolom tambahan
-        'jenis_kelamin',      // Kolom tambahan
-        'email',
-        'no_telepon',         // Kolom tambahan
-        'alamat_ktp',         // Kolom tambahan
-        'alamat_tinggal',     // Kolom tambahan
-        'jabatan_sebelumnya', // Kolom tambahan menggantikan pengalaman
-        'lama_pengalaman',    // Kolom tambahan untuk durasi pengalaman
-        'gaji_diharapkan',    // Kolom tambahan
-        'cv',
-        'linkedin',           // Kolom tambahan
+        'customer_id',
+        'lowongan_id',
+        'jawaban_soal_id',
         'status',
     ];
 
-    protected $casts = [
-        'tanggal_submit' => 'datetime',
-        'tanggal_lahir' => 'date', // Pastikan tanggal lahir dikonversi menjadi format date
-    ];
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function lowongan()
+    {
+        return $this->belongsTo(Lowongan::class);
+    }
+    public function jawabanSoal()
+    {
+        return $this->hasMany(JawabanSoalLowongan::class, 'customer_id', 'customer_id');
+    }
+    public function user()
+    {
+        return $this->customer->user(); // Mengambil user melalui relasi customer
+    }
+    public function history()
+    {
+        return $this->hasMany(HistoryPendaftar::class);
+    }
+
 }

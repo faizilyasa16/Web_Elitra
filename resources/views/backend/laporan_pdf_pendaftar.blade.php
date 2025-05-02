@@ -1,44 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan</title>
+    <title>Surat Kelulusan</title>
     <style>
         body { font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #f4f4f4; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .content { line-height: 1.6; }
+        .signature { margin-top: 50px; text-align: right; }
     </style>
 </head>
 <body>
-    <h3>Laporan Data Pendaftar</h3>
-    <p>Periode: {{ $request->tanggal_awal }} - {{ $request->tanggal_akhir }}</p>
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Posisi Dilamar</th>
-                <th>Email</th>
-                <th>Domisili</th>
-                <th>Tanggal Submit</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($pendaftar as $key => $product)
-            <tr>
-                <td>{{ $key + 1 }}</td>
-                <td>{{ $product->nama }}</td>
-                <td>{{ $product->posisi_dilamar }}</td>
-                <td>{{ $product->email }}</td>
-                <td>{{ $product->alamat_ktp }}</td>
-                <td>{{ $product->created_at }}</td>
-                <td>{{ $product->status }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="header">
+        <h2>PT Elitra/h2>
+        <h4>Jl. Cut Mutia No. 88, Kota Bekasi</h4>
+        <hr>
+        <h3>SURAT KETERANGAN KELULUSAN</h3>
+    </div>
+
+    <div class="content">
+        <p>Dengan ini menyatakan bahwa:</p>
+        <p><strong>Nama:</strong> {{ $pendaftar->customer->nama_lengkap }}</p>
+        <p><strong>Email:</strong> {{ $pendaftar->customer->user->email }}</p>
+        <p><strong>Lowongan:</strong> {{ $pendaftar->lowongan->posisi }}</p>
+
+        <p>Telah dinyatakan <strong>LULUS</strong> dalam proses seleksi yang diadakan oleh PT Elitra.</p>
+
+        <p>Demikian surat ini dibuat untuk dapat digunakan sebagaimana mestinya.</p>
+    </div>
+
+    <div class="signature">
+        <p>Jakarta, {{ now()->format('d F Y') }}</p>
+        <br><br>
+        <p><strong>HRD PT Elitra</strong></p>
+        <p><strong>Eriel Firman Suandanis</strong></p>
+    </div>
 </body>
 </html>

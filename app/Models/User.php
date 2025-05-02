@@ -17,6 +17,8 @@ class User extends Authenticatable
         'username',  // Ganti 'name' menjadi 'nama'
         'email',
         'hp',
+        'foto',
+        'role',
         'password',
     ];
 
@@ -28,4 +30,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
+    }
+    
+    public function jawabanlowongan()
+    {
+        return $this->hasMany(JawabanSoalLowongan::class);
+    }
+    public function sudahKontrak()
+    {
+        return $this->hasOne(SudahKontrak::class, 'user_id');
+    }
+
+
+
 }

@@ -12,19 +12,27 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('pekerja_memiliki_kontrak', function (Blueprint $table) {
+        Schema::create('pekerja', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('user')->onDelete('cascade');
             $table->string('nama');
             $table->string('posisi_dikontrak');
             $table->date('tanggal_mulai_kontrak');
+            $table->date('tanggal_akhir_kontrak');
             $table->string('email')->nullable();
             $table->string('pt')->nullable();
             $table->integer('lama_kontrak')->nullable();
-            $table->unsignedBigInteger('upah_kontrak')->nullable(); // Menggunakan unsignedBigInteger untuk upah
-            $table->string('status')->nullable();
-
+            $table->string('upah_kontrak')->nullable();
+    
+            // ✅ Enum untuk status_kontrak
+            $table->enum('status_kontrak', [
+                'Aktif',
+                'Selesai'
+            ])->nullable();
+    
             $table->timestamps();
         });
+    
     }
 
     /**

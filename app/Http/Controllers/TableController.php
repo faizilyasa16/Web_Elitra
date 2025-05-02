@@ -7,7 +7,12 @@ use App\Models\SudahKontrak;
 use App\Models\belumKontrak;
 use App\Models\Pendaftar;
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
+use App\Models\HistoryPendaftar;
+use App\Models\JawabanSoalLowongan;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -15,56 +20,35 @@ class TableController extends Controller
 {
     public function index(Request $request, KaryawanChart $karyawanChart)
     {
-        // Ambil data query untuk pekerja kontrak dan non-kontrak
         $queryPekerjaKontrak = $request->input('query_pekerja_kontrak');
-        $queryPekerjaNonKontrak = $request->input('query_pekerja_non_kontrak');
+    
+        $data['pekerja'] = SudahKontrak::query()
+            ->when($queryPekerjaKontrak, function ($query) use ($queryPekerjaKontrak) {
+                $query->where('nama', 'like', '%' . $queryPekerjaKontrak . '%')
+                      ->orWhere('email', 'like', '%' . $queryPekerjaKontrak . '%');
+            })
+            ->paginate(5);
+    
+            $pendaftarCount = JawabanSoalLowongan::with('soalLowongan.lowongan')
+            ->selectRaw('lowongan.posisi, COUNT(jawaban_soal.id) as total')
+            ->join('soal_lowongan', 'jawaban_soal.soal_lowongan_id', '=', 'soal_lowongan.id')
+            ->join('lowongan', 'soal_lowongan.lowongan_id', '=', 'lowongan.id')
+            ->groupBy('lowongan.posisi')
+            ->pluck('total', 'lowongan.posisi')
+            ->toArray();
         
-        // Filter data pekerja dengan kontrak
-        $data['data'] = SudahKontrak::where('status', 'kontrak')
-        ->when($queryPekerjaKontrak, function ($query) use ($queryPekerjaKontrak) {
-            $query->where('nama', 'like', '%' . $queryPekerjaKontrak . '%')
-                  ->orWhere('email', 'like', '%' . $queryPekerjaKontrak . '%');
-        })->paginate(5);
-    
-        $data['data2'] = BelumKontrak::where('status', '!=', 'kontrak')
-            ->when($queryPekerjaNonKontrak, function ($query) use ($queryPekerjaNonKontrak) {
-                $query->where('nama', 'like', '%' . $queryPekerjaNonKontrak . '%')
-                    ->orWhere('email', 'like', '%' . $queryPekerjaNonKontrak . '%');
-            })->paginate(5);
-        
-        // Hitung jumlah pekerja yang sudah kontrak dan belum kontrak
-        // $sudahKontrakCount = SudahKontrak::where('status', 'kontrak')->count();  
-        // $belumKontrakCount = BelumKontrak::where('status', '!=', 'kontrak')->count();  
-        // $pendaftarCount = Pendaftar::count(); 
-        $webDevCount = Pendaftar::where('posisi_dilamar', 'Web Developer')->count();
-        $cyberSecurityCount = Pendaftar::where('posisi_dilamar', 'Cyber Security')->count();
-        $softwareDevCount = Pendaftar::where('posisi_dilamar', 'Software Developer')->count();
-        $uiUxDesignCount = Pendaftar::where('posisi_dilamar', 'UI/UX')->count();
-    
-        // Hitung jumlah pekerja untuk setiap posisi
-        $webDevCount = Pendaftar::where('posisi_dilamar', 'Web Developer')->count();
-        $cyberSecurityCount = Pendaftar::where('posisi_dilamar', 'Cyber Security')->count();
-        $softwareDevCount = Pendaftar::where('posisi_dilamar', 'Software Developer')->count();
-        $uiUxDesignCount = Pendaftar::where('posisi_dilamar', 'UI/UX')->count();
-        
-        // Hitung total jumlah pekerja dari semua posisi
-        $totalPekerja = $webDevCount + $cyberSecurityCount + $softwareDevCount + $uiUxDesignCount;
-    
-        // Buat chart karyawan dengan data jumlah pekerja
-        $karyawanChart = $karyawanChart->build($webDevCount, $cyberSecurityCount, $softwareDevCount, $uiUxDesignCount);
-    
-        // Menambahkan data posisi dan total pekerja ke view
-        $data['karyawanChart'] = $karyawanChart;
-        $data['webDevCount'] = $webDevCount;
-        $data['cyberSecurityCount'] = $cyberSecurityCount;
-        $data['softwareDevCount'] = $softwareDevCount;
-        $data['uiUxDesignCount'] = $uiUxDesignCount;
-        $data['totalPekerja'] = $totalPekerja;  // Menambahkan total pekerja
-    
-        // Kembalikan view dengan data yang sudah diproses
-        return view('backend.content2', $data);
-    }
 
+    
+        // Bangun chart dari data itu
+        $chart = $karyawanChart->build($pendaftarCount);
+
+        $pendaftarLolos = Pendaftar::where('status', 'Lulus')->count();
+        $pendaftarGagal = Pendaftar::where('status', 'Gagal')->count();
+        $pendaftarProses = Pendaftar::where('status', 'Sedang Di Proses')->count();
+    
+        // Kirim semua ke view
+        return view('backend.content2', $data, compact('pendaftarCount', 'chart', 'pendaftarLolos', 'pendaftarGagal', 'pendaftarProses'));
+    }
     public function create()
     {
         return view('backend.tambahdata_pekerja_kontrak', [
@@ -80,48 +64,42 @@ class TableController extends Controller
     }
 
     
-    public function store(Request $request)
+    public function terimaPendaftar($id)
     {
+        // Ambil data lamaran
+        $lamaran = JawabanSoalLowongan::findOrFail($id);
+
+        $soalLowongan = $lamaran->soalLowongan; // Mengambil data SoalLowongan terkait dengan JawabanSoalLowongan
+    
+        // Ambil data lowongan dari SoalLowongan (menggunakan relasi Lowongan pada SoalLowongan)
+        $lowongan = $soalLowongan->lowongan; // Pastikan di model SoalLowongan ada relasi ke Lowongan
+        $perusahaan = $lowongan->perusahaan ?? 'PT Tidak Diketahui'; // Ambil nama perusahaan dari tabel Lowongan
+        $posisi = $lowongan->posisi ?? 'Posisi Tidak Ditentukan'; // Ambil posisi dari tabel Lowongan
         
-        // Validasi input dari user
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'posisi_dikontrak' => 'required|string|max:255',
-            'tanggal_mulai_kontrak' => 'required|date',
-            'email' => 'required|email|max:255',
-            'pt' => 'required|string|max:255',
-            'lama_kontrak' => 'required|numeric',
-            'upah_kontrak' => 'required|numeric',
-            'status' => 'required|in:Kontrak,belum,pendaftar',
+        $user = User::findOrFail($lamaran->customer->user_id); // Sesuaikan jika relasi antara Customer dan User menggunakan user_id
+        
+        // Buat data baru di tabel karyawan
+        SudahKontrak::create([
+            'user_id' => $user->id,
+            'nama' => $lamaran->customer->nama_lengkap ?? 'Nama Tidak Diketahui', // Ambil nama dari Customer
+            'posisi_dikontrak' => $posisi ?? 'Belum Ditentukan',
+            'email' => $user->email,
+            'pt' => $perusahaan,
+            'tanggal_mulai_kontrak' => now(),
+            'lama_kontrak' => 12, // Lama kontrak, misal 12 bulan
+            'upah_kontrak' => $lamaran->harapan_gaji ?? 0,
+            'tanggal_akhir_kontrak' => now()->addMonths(12),
+            'status_kontrak' => 'Aktif',
         ]);
-    
-        // Tentukan tabel berdasarkan status kontrak
-        if ($request->status == 'Kontrak') {
-            $pekerja = new SudahKontrak();
-        } elseif ($request->status == 'belum') {
-            $pekerja = new BelumKontrak();
-        } elseif ($request->status == 'pendaftar') {
-            $pekerja = new Pendaftar();
-        } else {
-            return redirect()->route('backend.content2')->with('error', 'Status kontrak tidak valid.');
-        }
-    
-        // Simpan data ke dalam model
-        $pekerja->nama = $request->input('nama');
-        $pekerja->posisi_dikontrak = $request->input('posisi_dikontrak');
-        $pekerja->tanggal_mulai_kontrak = $request->input('tanggal_mulai_kontrak');
-        $pekerja->email = $request->input('email');
-        $pekerja->pt = $request->input('pt');
-        $pekerja->lama_kontrak = $request->input('lama_kontrak');
-        $pekerja->upah_kontrak = $request->input('upah_kontrak');
-        $pekerja->status = $request->input('status');
-    
-        // Simpan data ke database
-        $pekerja->save();
-    
-        // Redirect dengan pesan sukses
-        return redirect()->route('backend.content2')->with('success', 'Pekerja berhasil ditambahkan.');
+
+        // Update status lamaran jadi diterima
+        $lamaran->update([
+            'status' => 'diterima',
+        ]);
+
+        return redirect()->back()->with('success', 'Pendaftar berhasil dijadikan karyawan.');
     }
+    
     
     public function store2(Request $request)
     {
@@ -180,7 +158,7 @@ class TableController extends Controller
         ]);
     }
     
-    public function update(Request $request, $id, $status)
+    public function update(Request $request, $id)
     {
         // Validasi input dari user
         $request->validate([
@@ -190,20 +168,12 @@ class TableController extends Controller
             'email' => 'required|email|max:255',
             'pt' => 'required|string|max:255',
             'lama_kontrak' => 'required|numeric',
-            'upah_kontrak' => 'required|numeric',
-            'status' => 'required|in:Kontrak,belum,pendaftar',
+            'upah_kontrak' => 'required|string|max:255',
+            'status_kontrak' => 'required|in:Aktif,Selesai',
         ]);
     
-        // Tentukan model berdasarkan status kontrak
-        if ($status == 'Kontrak') {
-            $pekerja = SudahKontrak::findOrFail($id);
-        } elseif ($status == 'Belum Kontrak') {
-            $pekerja = belumKontrak::findOrFail($id);
-        } elseif ($status == 'Pendaftar') {
-            $pekerja = Pendaftar::findOrFail($id);
-        } else {
-            return redirect()->route('backend.content2')->with('error', 'Status kontrak tidak valid.');
-        }
+        // Ambil data pekerja dari SudahKontrak
+        $pekerja = SudahKontrak::findOrFail($id);
     
         // Update data pekerja
         $pekerja->nama = $request->input('nama');
@@ -213,7 +183,7 @@ class TableController extends Controller
         $pekerja->pt = $request->input('pt');
         $pekerja->lama_kontrak = $request->input('lama_kontrak');
         $pekerja->upah_kontrak = $request->input('upah_kontrak');
-        $pekerja->status = $request->input('status');
+        $pekerja->status_kontrak = $request->input('status_kontrak');  // status tetap bisa diupdate meskipun semuanya disimpan di SudahKontrak
     
         // Simpan data ke database
         $pekerja->save();
@@ -221,6 +191,7 @@ class TableController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->route('backend.content2')->with('success', 'Pekerja berhasil diperbarui.');
     }
+    
     public function edit2($id, $status)
     {
         // Tentukan model berdasarkan status kontrak
@@ -294,21 +265,9 @@ class TableController extends Controller
     
     
 
-    public function destroy($id, $status)
+    public function destroy($id,)
     {
-        // Tentukan model berdasarkan status kontrak
-        if ($status == 'Kontrak') {
-            $pekerja = SudahKontrak::findOrFail($id); // Menggunakan model SudahKontrak
-        } elseif ($status == 'Belum Kontrak') {
-            $pekerja = BelumKontrak::findOrFail($id); // Menggunakan model BelumKontrak
-        } elseif ($status == 'Pendaftar') {
-            $pekerja = Pendaftar::findOrFail($id); // Menggunakan model Pendaftar
-        }
-        else {
-            return redirect()->route('backend.content2')->with('error', 'Status kontrak tidak valid.');
-        }
-    
-        // Hapus data pekerja
+        $pekerja = SudahKontrak::findOrFail($id);
         $pekerja->delete();
     
         // Redirect kembali ke halaman dengan pesan sukses

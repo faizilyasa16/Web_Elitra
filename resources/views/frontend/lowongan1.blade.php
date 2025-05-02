@@ -1,256 +1,221 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{ asset('css/Bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="css\Bootstrap-icon/font/bootstrap-icons.css">
-    <style>
-        .navbar ul li a {
-            color: white;
-            transition: color 0.3s ease;
-        }
+@extends('frontend.layout')
 
-        .navbar ul li a:hover {
-            color: orange;
-        }
-        .no-border .list-group-item {
-            border: none;
-        }
-        #applyForm {
-                    display: none; /* Form tidak terlihat secara default */
-                    margin-top: 20px;
-                }
+@section('content')
+{{-- bikin main content --}}
+<style>
+    .is-invalid {
+  border-color: #dc3545;
+}
 
+</style>
 
-    </style>
-</head>
-<body>
-    <div class="w-100 d-flex align-items-center justify-content-between position-fixed top-0" style="height: 100px; z-index: 1000; background-color: #222C65;">
-        <ul class="d-flex align-items-center list-unstyled m-0">
-            <li class="d-flex position-relative" style="right: 10px; bottom: 5px;">
-                <img src="img/logo_elitra.png" alt="" width="150px">
-            </li>
-        </ul>
-        <div class="me-5 navbar">
-            <ul class="d-flex gap-4 m-0 list-unstyled align-items-center justify-content-center">
-                <li><a href="{{ route('homefrontend') }}" class="text-decoration-none">Home</a></li>
-                <li><a href="{{ route('lowonganfrontend') }}" class="text-decoration-none">Lowongan</a></li>
-                <li><a href="{{ route('aboutusfrontend') }}" class="text-decoration-none me-2">Tentang Kami</a></li>
-            </ul>
-        </div>        
-    </div>
+<div class="mt-5 mb-5">
+    <div class="container">
+        <!-- Konten lowongan pekerjaan -->
+        <div id="jobContent">
 
-    {{-- bikin main content --}}
-
-
-    <div class="mt-5 mb-5">
-        <div class="container">
-            <!-- Konten lowongan pekerjaan -->
-            <div id="jobContent">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <h1 class="text-start" style="margin-top: 150px">WEB DEVELOPER</h1>
-                <div class="bg-warning mb-4" style="height: 4px; width: 12%;"></div>
+            <h1 class="text-start" style="margin-top: 150px">WEB DEVELOPER</h1>
+            <div class="bg-warning mb-4" style="height: 4px; width: 12%;"></div>
+            <div class="jobContent">
                 <div class="card">
                     <div class="card text-bg-dark">
-                        <img src="img/lowongan.jpg" class="card-img opacity-50" alt="..." style="width: 100%; height: 400px; object-fit: cover;">
+                        <img src="{{ Storage::url($lowongan->img) }}" class="card-img opacity-50" alt="..." style="width: 100%; height: 400px; object-fit: cover;">
                         <div class="card-img-overlay text-center d-flex align-items-center justify-content-center flex-column mt-5">
                             <!-- Placeholder jika ada konten tambahan di overlay -->
                         </div>
                     </div>
                     <div class="card-body">
-                        <h1 class="text-start ms-3">Web Developer</h1>
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                        <h1 class="text-start ms-3">{{ $lowongan->posisi }}</h1>
                         <ul class="list-group list-group-flush no-border">
                             <li class="list-group-item">
-                                <i class="bi bi-geo-alt-fill me-3"></i><p class="d-inline ms-3">Kota Bekasi</p>
+                                <i class="bi bi-geo-alt-fill me-3"></i><p class="d-inline ms-3">{{ $lowongan->alamat }}</p>
                             </li> 
                             <li class="list-group-item">
-                                <i class="bi bi-briefcase-fill me-3"></i><p class="d-inline ms-3">Full Time</p>
+                                <i class="bi bi-briefcase-fill me-3"></i><p class="d-inline ms-3">{{ ucwords(str_replace('time', ' Time', $lowongan->tipe)) }}</p>
                             </li>
                             <li class="list-group-item">
-                                <i class="bi bi-mortarboard-fill me-3"></i><p class="d-inline ms-3">Minimal Sarjana(S1)</p>
+                                <i class="bi bi-mortarboard-fill me-3"></i><p class="d-inline ms-3">Minimal Pendidikan {{ $lowongan->pendidikan }}</p>
                             </li>
                             <li class="list-group-item">
-                                <i class="bi bi-cash me-3"></i><p class="d-inline ms-3">Rp. 7.000.000 - 10.000.000</p>
+                                <i class="bi bi-cash me-3"></i><p class="d-inline ms-3">{{ $lowongan->gaji }}</p>
                             </li>
                         </ul>
                     </div>
                     <div class="card-body ms-4">
                         <h5 class="card-title">Job Description :</h5>
                         <ul class="mt-4">
-                            <li>Kandidat harus memiliki setidaknya Diploma, Gelar Sarjana, Gelar Pasca Sarjana, Teknik (Komputer/Telekomunikasi) atau setara dengan IPK minimal 3.0</li>
-                            <li>Setidaknya memiliki 2 tahun pengalaman dalam bidang yang sesuai untuk posisi ini</li>
-                            <li>Menguasai bahasa pengembangan front-end, termasuk JQuery, HTML5, dan CSS.</li>
-                            <li>Lulusan baru dengan logika dan pemikiran analitik yang baik didorong untuk melamar</li>
+                            @foreach ($deskripsi as $row)
+                                <li>{{ $row->deskripsi }}</li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="card-body ms-4">
                         <h5 class="card-title">Kualifikasi :</h5>
-                        <ul class="mt-4">
-                            <li>Kandidat harus memiliki setidaknya Diploma, Gelar Sarjana, Gelar Pasca Sarjana, Teknik (Komputer/Telekomunikasi) atau setara dengan IPK minimal 3.0</li>
-                            <li>Setidaknya memiliki 2 tahun pengalaman dalam bidang yang sesuai untuk posisi ini</li>
-                            <li>Menguasai bahasa pengembangan front-end, termasuk JQuery, HTML5, dan CSS.</li>
-                            <li>Lulusan baru dengan logika dan pemikiran analitik yang baik didorong untuk melamar</li>
+                        <ul class="mt-3">
+                            @foreach ($kualifikasi as $row)
+                                <li>{{ $row->kualifikasi }}</li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="card-body ms-4">
                         <h5 class="card-title">Benefit :</h5>
-                        <ul class="mt-4">
-                            <li>Asuransi kesehatan dan jiwa</li>
-                            <li>Tunjangan transportasi</li>
-                            <li>Kesempatan pengembangan karir</li>
-                            <li>Bonus tahunan berdasarkan kinerja</li>
-                            <li>Lingkungan kerja yang mendukung dan kolaboratif</li>
+                        <ul class="mt-3">
+                            @foreach ($benefit as $row)
+                                <li>{{ $row->benefit }}</li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="d-flex me-3 pb-3">
-                        <button class="btn btn-primary mt-3 ms-auto" onclick="showForm()">Apply</button>
+                        @if (!$isLoggedIn)
+                            <button class="btn btn-secondary mt-3 ms-auto" onclick="showLoginWarning()">Apply</button>
+                        @elseif (!$hasCompleteProfile)
+                            <button class="btn btn-warning mt-3 ms-auto" onclick="showProfileWarning()">Apply</button>
+                        @else
+                            <button class="btn btn-primary mt-3 ms-auto" onclick="showForm()">Apply</button>
+                        @endif
                     </div>
+                    
+                    
                 </div>
             </div>
-
-            <!-- Form yang menggantikan konten lowongan ketika tombol Apply diklik -->
-            <div id="applyForm" class="card p-4" style="margin-top: 150px">
-                <h2>Apply for Web Developer Position</h2>
-                <form action="{{ route('backend.content3.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" id="posisi_dilamar" name="posisi_dilamar" value="Web Developer">
-                    <div class="mb-3">
-                        <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" id="nama" name="nama" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tanggal_lahir">Tanggal Lahir</label>
-                        <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="no_telepon" class="form-label">No. Telepon</label>
-                        <input type="tel" id="no_telepon" name="no_telepon" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="alamat_ktp" class="form-label">Domisili</label>
-                        <input type="text" id="alamat_ktp" name="alamat_ktp" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="alamat_tinggal" class="form-label">Alamat lengkap</label>
-                        <input type="text" id="alamat_tinggal" name="alamat_tinggal" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="jabatan_sebelumnya">Pengalaman Sebelumnya</label>
-                        <input type="text" id="jabatan_sebelumnya" name="jabatan_sebelumnya" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lama_pengalaman">Lama Pengalaman di bidang ini(Bulan)</label>
-                        <input type="text" id="lama_pengalaman" name="lama_pengalaman" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="gaji_diharapkan" class="form-label">Gaji yang diharapkan</label>
-                        <input type="text" id="gaji_diharapkan" name="gaji_diharapkan" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="cv" class="form-label">Resume/CV</label>
-                        <input type="file" id="cv" name="cv" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="linkedin" class="form-label">Linkedin (Opsional)</label>
-                        <input type="text" id="linkedin" name="linkedin" class="form-control" >
-                    </div>
-                       <div class="d-flex me-3 pb-3">
-                        <button class="btn btn-secondary mt-3 me-auto" onclick="hideForm()">Kembali</button>
-                        <button type="submit" class="btn btn-primary mt-3 ms-auto" onclick="showForm('Web Developer')">Apply</button>
-                    </div>
-                </form>
             </div>
+            
+
+        <!-- Form yang menggantikan konten lowongan ketika tombol Apply diklik -->
+        <div id="applyForm" class="card" style="margin-top: 150px">
+            <div class="card text-bg-dark">
+                <img src="img/lowongan.jpg" class="card-img opacity-50" alt="..." style="width: 100%; height: 400px; object-fit: cover;">
+                <div class="card-img-overlay text-center d-flex align-items-center justify-content-center flex-column mt-5">
+                    <!-- Placeholder jika ada konten tambahan di overlay -->
+                </div>
+            </div>
+            <form action="{{ route('lowongan.tambah', $lowongan->id) }}" class="p-4" method="POST" enctype="multipart/form-data">
+                @csrf
+                <h4 class="mb-3 text-center" id="stepTitle">Step 1: Upload Resume</h4>
+
+                <div class="step-wrapper">
+                  <div class="step-line" id="stepLine"></div>
+                  <div class="step active" id="step1">1</div>
+                  <div class="step" id="step2">2</div>
+                  <div class="step" id="step3">3</div>
+                </div>
+
+                    <div id="content1" class="step-content active">
+                        <h2 class="mb-3">Apply for Web Developer Position</h2>
+                        <div class="card">
+                            <div class="card-body p-5">
+                                <input type="hidden" id="perusahaan" name="perusahaan" value="{{ $lowongan->perusahaan }}">
+                                <div class="mb-3">
+                                    <label for="cv" class="form-label">Upload CV</label>
+                                    <input type="file" class="form-control @error('cv') is-invalid @enderror" id="cv" name="cv">
+                                    @if ($customer && $customer->cv)
+                                        <div class="mt-2">
+                                            <small>File saat ini: 
+                                                <a href="{{ asset('storage/cv/' . $customer->cv) }}" target="_blank">Lihat CV</a>
+                                            </small>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="mb-3">
+                                    <label for="letter" class="form-label">Cover Letter</label>
+                                    <input type="file" class="form-control @error('letter') is-invalid @enderror" id="letter" name="letter">
+                                    @error('letter')
+                                      <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="foto_ktp" class="form-label">Foto KTP</label>
+                                    <input type="file" class="form-control @error('foto_ktp') is-invalid @enderror" id="foto_ktp" name="foto_ktp">
+                                    @error('foto_ktp')
+                                      <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div id="content2" class="step-content">
+                        <h2 class="mb-3 mt-5">Apply for Web Developer Position</h2>
+                        <div class="card">
+                            <div class="card-body p-5">
+                                    <input type="hidden" id="posisi_dilamar" name="posisi_dilamar" value="Web Developer">
+                                    <div class="mb-3">
+                                        <label for="pengalaman" class="form-label">Pengalaman dalam bidang(tahun) </label>
+                                        <input type="number" class="form-control @error('pengalaman') is-invalid @enderror" value="{{ $customer->experience }}" id="pengalaman" name="pengalaman" required>
+                                        @error('pengalaman')
+                                          <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="harapan_gaji" class="form-label">Gaji yang diharapkan</label>
+                                        <input type="text" class="form-control @error('harapan_gaji') is-invalid @enderror" id="harapan_gaji" name="harapan_gaji" required>
+                                        @error('harapan_gaji')
+                                          <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pendidikan" class="form-label">Pendidikan Terakhir</label>
+                                        <select id="pendidikan" name="pendidikan" class="form-control @error('pendidikan') is-invalid @enderror" required>
+                                          <option value="">-- Pilih Pendidikan --</option>
+                                          <option value="SD" >SD</option>
+                                          <option value="SMP">SMP</option>
+                                          <option value="SMA">SMA/SMK</option>
+                                          <option value="D3">D3</option>
+                                          <option value="S1">S1</option>
+                                          <option value="S2">S2</option>
+                                          <option value="S3">S3</option>
+                                        </select>
+                                        @error('pendidikan')
+                                          <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="content3" class="step-content">
+                        @foreach ($soalLowongan as $soal)
+                        <div class="mb-3">
+                            <label for="jawaban[{{ $soal->id }}]">{{ $soal->soal }}</label>
+                            <input type="text" id="jawaban[{{ $soal->id }}]"  name="jawaban[{{ $soal->id }}]" class="form-control mt-2" required>
+                        </div>
+                    @endforeach
+                    </div>
+                  
+                    <!-- Tombol navigasi -->
+                    <div class="d-flex justify-content-end gap-3 mt-4 p-4">
+                      <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                      <button id="nextButton" class="btn btn-primary" onclick="nextStep()">Next</button>
+                    </div>
+                <!-- Isi konten tiap step -->
+            </form>
+                
         </div>
     </div>
+</div>
 
-    <div class="w-100" style="height: 200px; background-color: #222C65;">
-        <div class="container">
-          <div class="row">
-            <div class="col-3">
-              <img src="{{ asset('img/logo_elitra.png') }}" alt="" style="width: 200px;">
-            </div>
-            <div class="col-3" style="margin-top: 20px">
-              <h4 class="text-white">Tentang Kami</h4>
-              <p class="text-white">EIitra adalah layanan outsourcing berbasis software yang fokus pada rekrutmen, mempermudah pencarian pekerjaan dan perekrutan karyawan dengan solusi efisien dan terintegrasi.</p>
-            </div>
-            <div class="col-3" style="margin-top: 20px;">
-              <h4 class="text-white">Follow Us</h4>
-              <ul class="list-unstyled d-flex m-0 p-0">
-                <li class="me-3">
-                  <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-                    <i class="bi bi-facebook"></i>
-                  </a>
-                </li>
-                <li class="me-3">
-                  <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-                    <i class="bi bi-instagram"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="text-white" style="display: inline-flex; align-items: center; justify-content: center; background-color: #0d6efd; color: white; border-radius: 50%; width: 40px; height: 40px;">
-                    <i class="bi bi-twitter"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            
-            
-            
-            <div class="col-3" style="margin-top: 20px">
-              <h4 class="text-white">Contact Us</h4>
-              <ul class=" list-unstyled m-0">
-                <li class="d-flex align-items-center">
-                  <i class="bi bi-building me-3 text-white"></i>
-                  <p class="text-white mb-0">Jl. Cut Mutia No. 88, Kota Bekasi</p>
-                </li>
-                <li class="d-flex align-items-center">
-                  <i class="bi bi-phone me-3 text-white"></i>
-                  <p class="text-white mb-0">+6281234567890</p>
-                </li>
-                <li class="d-flex align-items-center">
-                  <i class="bi bi-envelope me-3 text-white"></i>
-                  <p class="text-white mb-0">LQl7y@example.com</p>
-                </li>
-                
-              </ul>
-            </div>
-        </div>
-      </div>
 
-      <script>
-        // JavaScript untuk menampilkan form ketika tombol "Apply" diklik
-        function showForm(posisi) {
-            document.getElementById("jobContent").style.display = "none";
-            document.getElementById("applyForm").style.display = "block";
-            document.getElementById("posisi_dilamar").value = posisi; // Set nilai posisi yang dipilih
-        }
+<script>
+    function submitForm() {
+  alert('Form berhasil dikirim! 🎉');
+  // Bisa lanjut redirect, kirim data via AJAX atau reset di sini
+}
+function showLoginWarning() {
+        alert("Silakan login terlebih dahulu untuk melamar.");
+        window.location.href = "{{ route('backend.login') }}"; // arahkan ke halaman login
+    }
 
-        function hideForm() {
-            document.getElementById("jobContent").style.display = "block"; // Tampilkan konten lowongan
-            document.getElementById("applyForm").style.display = "none";  // Sembunyikan form
-        }
-    </script>
-</body>
-</html>
+    function showProfileWarning() {
+        alert("Lengkapi data diri Anda terlebih dahulu sebelum melamar.");
+        window.location.href = "{{ route('profile') }}"; // ganti sesuai route profil customer
+    }
+</script>
+@endsection

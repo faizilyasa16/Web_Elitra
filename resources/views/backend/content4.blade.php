@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="">
-    <h1 class="ms-4 mt-5">List perusahaan yang Terdaftar</h1>
-    <table class="table table-hover ms-4 text-center" style="width: 80%">
+    <h1 class="ms-4 mt-5">Perusahaan dengan Karyawan Elitra</h1>
+    <table class="table table-hover ms-4 text-center" style="width: 98%">
         <thead>
           <tr class="border">
             <form method="GET" action="{{ route('backend.content4') }}">
@@ -15,7 +15,6 @@
                   </span>
                   <input class="form-control" type="search" placeholder="Cari sesuatu..." aria-label="Search" name="query">
                 </div>
-                <a class="btn btn-primary ms-2" href="{{ route('backend.content4.create') }}" role="button">Tambah Data</a>
               </div>
             </th>
             </form>
@@ -23,38 +22,80 @@
             <th scope="col">No</th>
             <th scope="col">Perusahaan</th>
             <th scope="col">Jumlah Staff Bekerja Sama</th>
-            <th scope="col">Tanggal Terdaftar</th>
-            <th scope="col">Tanggal Berakhir</th>
-            <th scope="col">Email Perusahaan</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
             @foreach ($data4 as $row)
             <tr>
               <th scope="row">{{ $loop->iteration + ($data4->currentPage() - 1) * $data4->perPage() }}</th>
-              <td>{{ $row->perusahaan }}</td>
-                <td>{{ $row->jumlah_staff_bekerja_sama }}</td>
-                <td>{{ $row->tanggal_terdaftar }}</td>
-                <td>{{ $row->tanggal_berakhir }}</td>
-                <td>{{ $row->email_perusahaan }}</td>
-                <td>{{ $row->status }}</td>
-                <td>
-                    <form action="{{ route('backend.content4.destroy', ['id' => $row->id]) }}" method="post">
-                        @csrf
-                        @method('delete')
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                        <a class="btn btn-primary" href="{{ route('backend.content4.edit', ['id' => $row->id]) }}" role="button">Edit</a>
-                      </form>
-                </td>
+              <td>{{ $row->pt }}</td>
+              <td>{{ $row->total }}</td>
+            </tr>
                 @endforeach
         </tbody>
       </table>
+      <div class="modal fade" id="tambahPerusahaan" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">Tambah Perusahaan</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+    
+            <div class="modal-body">
+              <form action="{{ route('backend.content4.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+            
+                <div class="mb-3">
+                  <label for="perusahaan" class="form-label">Nama Perusahaan</label>
+                  <input type="text" name="perusahaan" id="perusahaan" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                  <label for="jumlah_staff_bekerja_sama" class="form-label">Jumlah Staff Bekerja Sama</label>
+                  <input type="number" name="jumlah_staff_bekerja_sama" id="jumlah_staff_bekerja_sama" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                  <label for="tanggal_terdaftar" class="form-label">Tanggal Terdaftar</label>
+                  <input type="date" name="tanggal_terdaftar" id="tanggal_terdaftar" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                  <label for="tanggal_berakhir" class="form-label">Tanggal Berakhir</label>
+                  <input type="date" name="tanggal_berakhir" id="tanggal_berakhir" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                  <label for="email_perusahaan" class="form-label">Email Perusahaan</label>
+                  <input type="email" name="email_perusahaan" id="email_perusahaan" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                  <label for="status" class="form-label">Status Perusahaan</label>
+                  <select name="status" id="status" class="form-select" required>
+                      <option value="Terdaftar">Terdaftar</option>
+                      <option value="Berakhir">Berakhir</option>
+                  </select>
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            
+              </form>
+            </div>
+            
+    
+          </div>
+        </div>
+      </div>
       <div class="" style="display: flex; margin-left: 40%;">
         {{ $data4->links() }}
       </div>
-      <div class="mt-4 ms-4" style="width: 80%;">
+      {{-- <div class="mt-4 ms-4" style="width: 80%;">
         <h5>Cetak Laporan</h5>
         <form action="{{ route('laporan.generate2') }}" method="POST" target="_blank">
             @csrf
@@ -72,6 +113,6 @@
                 </div>
             </div>
         </form>
-    </div>
+    </div> --}}
 </div>
 @endsection

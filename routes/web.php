@@ -11,9 +11,12 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\pendaftarController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PerusahaanController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LowonganController;
+use App\Http\Controllers\SoalLowonganController;
+use App\Http\Controllers\JawabanSoalLowonganController;
 use App\Models\Pendaftar;
 use Illuminate\Auth\Events\Login;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,7 +27,6 @@ use Illuminate\Auth\Events\Login;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -59,14 +61,12 @@ Route::get('password/reset/{token}', [LoginController::class, 'showResetForm'])-
 Route::post('password/reset', [LoginController::class, 'resetPassword'])->name('password.update');
 
 
-
 // RUTE BACKEND
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','role:superadmin'])->group(function () {
     // Halaman utama backend
     Route::get('home', [HomeController::class, 'content1'])->name('home');
 
     // Logout
-    Route::post('logout', [LoginController::class, 'logoutBackEnd'])->name('backend.logout');
 
     // Content 1
     Route::get('/content', function () {
@@ -75,19 +75,20 @@ Route::middleware(['auth'])->group(function () {
 
     // Content 2
     Route::get('/content2', [TableController::class, 'index'])->name('backend.content2');
-    Route::delete('/content2/{id}/{status}', [TableController::class, 'destroy'])->name('backend.content2.destroy');
+    Route::delete('/content2/{id}', [TableController::class, 'destroy'])->name('backend.content2.destroy');
     Route::post('/content2/store', [TableController::class, 'store'])->name('backend.content2.store');
     Route::post('/content2/store2', [TableController::class, 'store2'])->name('backend.content2.store2');
     Route::get('/content2/tambah', [TableController::class, 'create'])->name('backend.content2.create');
     Route::get('/content2/tambah2', [TableController::class, 'create2'])->name('backend.content2.create2');
-    Route::get('/content2/edit/{id}/{status}', [TableController::class, 'edit'])->name('backend.content2.edit');
-    Route::put('/content2/update/{id}/{status}', [TableController::class, 'update'])->name('backend.content2.update');
+    Route::get('/content2/edit/{id}/', [TableController::class, 'edit'])->name('backend.content2.edit');
+    Route::put('/content2/update/{id}', [TableController::class, 'update'])->name('backend.content2.update');
     Route::get('/content2/edit2/{id}/{status}', [TableController::class, 'edit2'])->name('backend.content2.edit2');
     Route::put('/content2/update2/{id}/{status}', [TableController::class, 'update2'])->name('backend.content2.update2');
 
     // Content 3
     Route::get('/content3', [pendaftarController::class, 'index'])->name('backend.content3.index');
     Route::patch('/backend/content3/{id}/update-status', [pendaftarController::class, 'updateStatus'])->name('backend.content3.updateStatus');
+    Route::post('/content3/terima/{lamaran_id}', [TableController::class, 'terimaPendaftar'])->name('terima.pendaftar');
     Route::delete('/content3/{id}', [pendaftarController::class, 'destroy'])->name('backend.content3.destroy');
 
     // Content 4
@@ -100,17 +101,41 @@ Route::middleware(['auth'])->group(function () {
 
     // Content 5
     Route::get('/content5/{nama}', [pendaftarController::class, 'index2'])->name('backend.content5');
-});
 
-Route::post('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
+    // Content 6
+    Route::get('/content6', [UserController::class, 'admin'])->name('backend.content6');
+    Route::post('/content6/tambah', [UserController::class, 'useradmin'])->name('backend.content6.useradmin');
+    Route::delete('/content6/{id}', [UserController::class, 'destroy'])->name('backend.content6.destroy');
+    Route::post('/content6/edit/{id}', [UserController::class, 'store'])->name('backend.content6.store');
+
+    // Content 7
+    Route::get('/content7', [LowonganController::class, 'index'])->name('backend.content7');
+    Route::get('/content7/tambah', [LowonganController::class, 'create'])->name('backend.content7.create');
+    Route::get('/content7/edit/{id}', [LowonganController::class, 'edit'])->name('backend.content7.edit');
+    Route::put('/content7/update/{id}', [LowonganController::class, 'update'])->name('backend.content7.update');
+    Route::post('/content7/store', [LowonganController::class, 'store'])->name('backend.content7.store');
+    Route::delete('/content7/{id}', [LowonganController::class, 'destroy'])->name('backend.content7.destroy');
+    Route::get('/content7/soal/{id}', [LowonganController::class, 'soal'])->name('backend.content7.soal');
+    Route::post('/content7/soal/tambahSoal/{lowonganId}', [LowonganController::class, 'tambahSoal'])->name('backend.content7.tambahSoal');
+});
+Route::post('logout', [LoginController::class, 'logoutBackEnd'])->name('backend.logout');
+
+Route::get('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
 Route::post('/laporan/generate2', [LaporanController::class, 'generate2'])->name('laporan.generate2');
 
 // route khusus frontend
 Route::get('/homefrontend', [HomeFrontendController::class, 'index']) ->name('homefrontend');
 Route::get('/lowonganfrontend', [HomeFrontendController::class, 'lowongan']) ->name('lowonganfrontend');
 Route::get('/aboutusfrontend', [HomeFrontendController::class, 'aboutus']) ->name('aboutusfrontend');
-Route::get('/lowonganfrontend1', [HomeFrontendController::class, 'lowongan1']) ->name('lowonganfrontend1');
+Route::get('/lowongan/{id}', [HomeFrontendController::class, 'lowongan1'])->name('lowonganfrontend1');
+Route::post('/lowongan/tambah/{lowonganid}', [LowonganController::class, 'simpanLamaran'])->name('lowongan.tambah');
 Route::post('/content3/store', [PendaftarController::class, 'store'])->name('backend.content3.store');
 Route::get('/lowonganfrontend2', [HomeFrontendController::class, 'lowongan2']) ->name('lowonganfrontend2');
 Route::get('/lowonganfrontend3', [HomeFrontendController::class, 'lowongan3']) ->name('lowonganfrontend3');
 Route::get('/lowonganfrontend4', [HomeFrontendController::class, 'lowongan4']) ->name('lowonganfrontend4');
+Route::middleware(['auth','role:customer'])->group(function () {
+    Route::get('profile',[UserController::class,'index'])->name('profile');
+    Route::get('history',[UserController::class,'history'])->name('history');
+    Route::post('profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::post('profile/updateFoto/{id}', [UserController::class, 'updateFoto'])->name('profile.updateFoto');
+});

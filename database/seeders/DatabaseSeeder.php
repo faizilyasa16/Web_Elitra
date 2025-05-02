@@ -14,20 +14,10 @@ class DatabaseSeeder extends Seeder
     {
         User::create([
             'username' => 'Admin',
-            'email' => 'admin@example.com', // Ganti dengan email yang unik
-            'role' => '1',
-            'status' => 1,
+            'email' => 'admin@gmail.com', // Ganti dengan email yang unik
+            'role' => 'superadmin',
             'password' => bcrypt('password'),
             'hp' => '081234567890',
-        ]);
-    
-        User::create([
-            'username' => 'Ilyasa',
-            'email' => 'ilyasa@example.com', // Ganti dengan email yang unik
-            'role' => '0',
-            'status' => 1,
-            'password' => bcrypt('password'),
-            'hp' => '081234569000',
         ]);
     }
 }

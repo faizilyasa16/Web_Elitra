@@ -11,35 +11,49 @@ use App\Models\User;
 
 class LoginController extends Controller
 {
+
     public function loginBackEnd()
     {
         return view('backend.login', [
-            'title' => 'Login',
+            'title' => 'Login Page',
         ]);
     }
 
     public function authenticateBackEnd(Request $request)
-    {
-        // Validasi input
-        $credentials = $request->validate([
-            'username' => 'required',
-            'password' => 'required'
-        ]);
-    
-        Log::info('Attempting to log in user: ' . $request->username);
-    
-        // Coba autentikasi pengguna
-        if (Auth::attempt($credentials)) {
-            Log::info('Login successful for user: ' . $request->username);
-            
-            // Jika akun aktif
-            $request->session()->regenerate();
-            return redirect()->intended(route('home'));
+{
+    // Validasi input
+    $credentials = $request->validate([
+        'username' => 'required',
+        'password' => 'required'
+    ]);
+
+    Log::info('Attempting to log in user: ' . $request->username);
+
+    // Coba autentikasi pengguna
+    if (Auth::attempt($credentials)) {
+        Log::info('Login successful for user: ' . $request->username);
+
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+        // Redirect sesuai role
+        if ($user->role === 'superadmin') {
+            return redirect()->route('home');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('home');
+        } elseif ($user->role === 'customer') {
+            return redirect()->route('homefrontend');
+        } else {
+            Auth::logout();
+            return back()->with('error', 'Akun Anda tidak memiliki akses yang valid.');
         }
-        
-        Log::warning('Login failed for user: ' . $request->username);
-        return back()->with('error', 'Login Failed! Please check your username and password and try again.');
     }
+
+    Log::warning('Login failed for user: ' . $request->username);
+    return back()->with('error', 'Login Failed! Please check your username and password and try again.');
+}
+
 
 // Menampilkan form reset password
     public function reset_password()

@@ -122,7 +122,7 @@
                             <div style="width: 100%; height: 2px; background-color: #ddd;"></div>
                         </div>
                         <div class="mb-3">
-                            <a class="text-start" href="{{ route('backend.login') }}">Sudah Punya Akun?</a>
+                            <a class="text-start text-white" href="{{ route('backend.login') }}">Sudah Punya Akun?</a>
                         </div>
                         <div class="mx-auto d-flex flex-column flex-md-row justify-content-md-center mt-4 ">
                             <button type="submit" class="btn btn-primary ms-auto w-100">Register</button> 
