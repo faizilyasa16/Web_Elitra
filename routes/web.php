@@ -101,27 +101,11 @@ Route::middleware(['auth','role:superadmin'])->group(function () {
 
     // Content 5
     Route::get('/content5/{nama}', [pendaftarController::class, 'index2'])->name('backend.content5');
+    Route::post('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
+    Route::post('/laporan/generate2', [LaporanController::class, 'generate2'])->name('laporan.generate2');
 
-    // Content 6
-    Route::get('/content6', [UserController::class, 'admin'])->name('backend.content6');
-    Route::post('/content6/tambah', [UserController::class, 'useradmin'])->name('backend.content6.useradmin');
-    Route::delete('/content6/{id}', [UserController::class, 'destroy'])->name('backend.content6.destroy');
-    Route::post('/content6/edit/{id}', [UserController::class, 'store'])->name('backend.content6.store');
-
-    // Content 7
-    Route::get('/content7', [LowonganController::class, 'index'])->name('backend.content7');
-    Route::get('/content7/tambah', [LowonganController::class, 'create'])->name('backend.content7.create');
-    Route::get('/content7/edit/{id}', [LowonganController::class, 'edit'])->name('backend.content7.edit');
-    Route::put('/content7/update/{id}', [LowonganController::class, 'update'])->name('backend.content7.update');
-    Route::post('/content7/store', [LowonganController::class, 'store'])->name('backend.content7.store');
-    Route::delete('/content7/{id}', [LowonganController::class, 'destroy'])->name('backend.content7.destroy');
-    Route::get('/content7/soal/{id}', [LowonganController::class, 'soal'])->name('backend.content7.soal');
-    Route::post('/content7/soal/tambahSoal/{lowonganId}', [LowonganController::class, 'tambahSoal'])->name('backend.content7.tambahSoal');
 });
-Route::post('logout', [LoginController::class, 'logoutBackEnd'])->name('backend.logout');
 
-Route::get('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
-Route::post('/laporan/generate2', [LaporanController::class, 'generate2'])->name('laporan.generate2');
 
 // route khusus frontend
 Route::get('/homefrontend', [HomeFrontendController::class, 'index']) ->name('homefrontend');

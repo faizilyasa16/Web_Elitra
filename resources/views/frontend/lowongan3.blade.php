@@ -7,7 +7,7 @@
     <div class="mt-5 mb-5">
         <div class="container">
             <!-- Konten lowongan pekerjaan -->
-            <div id="jobContent">
+            <div id="jobContent" style="margin-top: 150px">
                 @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
