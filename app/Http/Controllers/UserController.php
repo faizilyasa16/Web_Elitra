@@ -17,8 +17,15 @@ class UserController extends Controller
     }
     public function history()
     {
-        // Ambil data pendaftar berdasarkan customer_id yang sudah login
-        $hasil = Pendaftar::where('customer_id', Auth::user()->customer->id)->get();
+        // Pastikan user punya relasi customer
+        if (!Auth::check() || !Auth::user()->customer) {
+            return redirect()->back()->with('error', 'Belum ada data lamaran atau akun belum lengkap.');
+        }
+    
+        $customerId = Auth::user()->customer->id;
+    
+        // Ambil data pendaftar berdasarkan customer_id
+        $hasil = Pendaftar::where('customer_id', $customerId)->get();
     
         // Hitung jumlah status untuk masing-masing kategori
         $prosesCount = $hasil->where('status', 'Sedang Di Proses')->count();
@@ -28,6 +35,7 @@ class UserController extends Controller
         // Kirim data ke view
         return view('profile_user.history', compact('hasil', 'prosesCount', 'lolosCount', 'gagalCount'));
     }
+    
     
     public function admin(){
         $dataAdmin = User::where('role', 'admin')->paginate(10); // <- tambahin paginate disini

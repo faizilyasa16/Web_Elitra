@@ -101,8 +101,40 @@ Route::middleware(['auth','role:superadmin'])->group(function () {
 
     // Content 5
     Route::get('/content5/{nama}', [pendaftarController::class, 'index2'])->name('backend.content5');
-    Route::post('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
     Route::post('/laporan/generate2', [LaporanController::class, 'generate2'])->name('laporan.generate2');
+
+// TAMPIL ADMIN
+Route::get('/content6', [UserController::class, 'admin'])->name('backend.content6');
+
+// HAPUS ADMIN
+Route::delete('/content6/{id}', [UserController::class, 'destroy'])->name('backend.content6.destroy');
+
+// TAMBAH ADMIN
+Route::post('/content6/store', [UserController::class, 'useradmin'])->name('backend.content6.useradmin');
+
+// EDIT ADMIN (POST ke .store buat update)
+Route::post('/content6/store/{id}', [UserController::class, 'store'])->name('backend.content6.store');
+
+// TAMPIL FORM TAMBAH (nggak dipakai di Blade lo, tapi gpp)
+Route::get('/content6/tambah', [UserController::class, 'create'])->name('backend.content6.create');
+
+// TAMPIL FORM EDIT (juga nggak dipakai)
+Route::get('/content6/edit/{id}', [UserController::class, 'edit'])->name('backend.content6.edit');
+
+    
+
+    // Menampilkan daftar lowongan
+    Route::get('/content7', [LowonganController::class, 'index'])->name('backend.content7');
+    Route::get('/lowongan/tambah', [LowonganController::class, 'create'])->name('backend.content7.create');
+    Route::post('/lowongan/store', [LowonganController::class, 'store'])->name('backend.content7.store');
+    Route::get('/lowongan/{id}/soal', [LowonganController::class, 'soal'])->name('backend.content7.soal');
+    Route::post('/lowongan/{id}/soal', [LowonganController::class, 'tambahSoal'])->name('backend.content7.tambahSoal');
+    Route::get('/lowongan/{id}/edit', [LowonganController::class, 'edit'])->name('backend.content7.edit');
+    Route::put('/lowongan/{id}/update', [LowonganController::class, 'update'])->name('backend.content7.update');
+    Route::delete('/lowongan/{id}', [LowonganController::class, 'destroy'])->name('backend.content7.destroy');    
+
+    Route::post('logout', [LoginController::class, 'logoutBackEnd'])->name('backend.logout');
+
 
 });
 
@@ -122,4 +154,10 @@ Route::middleware(['auth','role:customer'])->group(function () {
     Route::get('history',[UserController::class,'history'])->name('history');
     Route::post('profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::post('profile/updateFoto/{id}', [UserController::class, 'updateFoto'])->name('profile.updateFoto');
+    Route::post('/laporan/generate', [LaporanController::class, 'generate'])->name('laporan.generate');
+
+
+});
+Route::middleware(['auth','role:admin,superadmin,customer'])->group(function () {
+    Route::post('logout', [LoginController::class, 'logoutBackEnd'])->name('backend.logout');
 });

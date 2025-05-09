@@ -93,22 +93,27 @@ class LowonganController extends Controller
     }
 
     public function tambahSoal(Request $request, $lowonganId)
-{
-    $request->validate([
-        'soal' => 'required|array',
-        'soal.*' => 'required|string'
-        
-    ]);
-
-    foreach ($request->soal as $isiSoal) {
-        SoalLowongan::create([
-            'lowongan_id' => $lowonganId,
-            'soal' => $isiSoal,
+    {
+        $request->validate([
+            'soal' => 'required|array',
+            'soal.*' => 'required|string'
         ]);
+    
+        // Filter soal yang tidak kosong dan tidak hanya whitespace
+        $filteredSoal = array_filter($request->soal, function ($soal) {
+            return trim($soal) !== '';
+        });
+    
+        foreach ($filteredSoal as $isiSoal) {
+            SoalLowongan::create([
+                'lowongan_id' => $lowonganId,
+                'soal' => $isiSoal,
+            ]);
+        }
+    
+        return redirect()->route('backend.content7')->with('success', 'Soal berhasil ditambahkan.');
     }
-
-    return redirect()->route('backend.content7')->with('success', 'Soal berhasil ditambahkan.');
-}
+    
 
 public function simpanLamaran(Request $request, $lowonganId)
 {
@@ -133,13 +138,6 @@ public function simpanLamaran(Request $request, $lowonganId)
 
     // Ambil foto KTP dari request
     $fotoKtpPath = $request->file('foto_ktp')->store('foto_ktp', 'public');
-
-    // Simpan ke soal_lowongan (jika masih pakai)
-    SoalLowongan::create([
-        'lowongan_id' => $lowonganId,
-        'cv' => $cvPath, // dari profil, bukan upload baru
-        'soal' => '-',
-    ]);
 
         // Cek dulu apakah pendaftar sudah pernah apply
     $existing = Pendaftar::where('customer_id', $customer->id)

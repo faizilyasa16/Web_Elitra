@@ -63,12 +63,15 @@
                                 </td>
                                 <td>
                                     @if ($item->status == 'Lulus')
-                                        <a href="{{ route('laporan.generate') }}" class="btn btn-sm btn-primary" target="_blank">
+                                    <form action="{{ route('laporan.generate') }}" method="POST" target="_blank">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-primary">
                                             Cetak Surat
-                                        </a>
-                                    @else
-                                        -
-                                    @endif
+                                        </button>
+                                    </form>
+                                @else
+                                -
+                            @endif
                                 </td>
                                 <td>
                                     @if ($item->status == 'Lulus')

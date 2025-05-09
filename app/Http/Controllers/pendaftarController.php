@@ -14,8 +14,8 @@ class pendaftarController extends Controller
     public function index()
     {
         $pendaftar = Pendaftar::with(['customer', 'jawabanSoal.soalLowongan'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
     
         // Ambil semua user_id yang sudah menjadi pekerja
         $userPekerjaIds = SudahKontrak::pluck('user_id')->toArray();
